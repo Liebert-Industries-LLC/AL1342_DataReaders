@@ -25,7 +25,7 @@ Provides information on the device's operational status (OK, maintenance require
 
 """
 
-#****************************************** Get the data in Hex format **************************************************
+#****************************************** Get the data in Hex format from Genrator**************************************************
 def read_vibration_data():
     # Data structure based on the sensor's output data:
     # v-Rms (16-bit), a-Peak (16-bit), a-Rms (16-bit), Temperature (16-bit), Crest (16-bit), Device Status (4-bit)
@@ -58,7 +58,7 @@ def save_data_to_json(data, filename='vibration_data.json'):
     with open(filename, 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
-# Main function
+
 def main():
     while True:
         # Step 1: Read raw data from the sensor (replace this with actual data retrieval code)
