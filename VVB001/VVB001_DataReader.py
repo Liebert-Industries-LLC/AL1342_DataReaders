@@ -6,7 +6,7 @@ import time
 v-Rms (Speed Effective/average Value):
 Represents the root mean square (RMS) speed of vibration. 
 
-a-Peak (Acceleration Peak Value):
+a-Peak (Acceleration Peak Value): a = Δv/Δt.
 Represents Maximum acceleration, of vibration.
 
 a-Rms (Acceleration Effective Value):
@@ -14,7 +14,7 @@ Represents the RMS acceleration of vibration.
 
 Crest factor: This is the acceleration crest factor, (multiplied by 0.1). 
 It's a useful metric for evaluating the peak-to-RMS ratio of vibration.
-peak-to-RMS ratio = a-Peak / a-Rms
+peak-to-RMS ratio = a-Peak / a-Rms  
 A high crest factor may indicate that the equipment is experiencing shock or impulsive events, while a low crest factor may indicate steady operation.
 
 Temperature:
