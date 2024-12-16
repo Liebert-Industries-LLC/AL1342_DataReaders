@@ -1,0 +1,141 @@
+[
+    {
+        "id": "2e0418cda4baf1e8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a9b5aea8ceb50365",
+        "type": "debug",
+        "z": "2e0418cda4baf1e8",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "3f0dad7effca172a",
+        "type": "inject",
+        "z": "2e0418cda4baf1e8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 420,
+        "wires": [
+            [
+                "7e3295428acb70ab",
+                "0554e091255b0877"
+            ]
+        ]
+    },
+    {
+        "id": "9a740cf48311e2d0",
+        "type": "function",
+        "z": "2e0418cda4baf1e8",
+        "name": "Convert.DATA",
+        "func": "// Node-RED Function node\nfunction decodeTemperature(hexString) {\n    // Remove \"AL\" prefix and get the hex value\n    const hexValue = hexString.substring(2);\n\n    // Convert hex to decimal\n    const decimal = parseInt(hexValue, 16);\n\n    // Extract sign bit (bit 15)\n    const signBit = (decimal >> 15) & 1;\n\n    // Extract value (bits 0-14)\n    let value = decimal & 0x7FFF;\n\n    // Apply sign if negative\n    if (signBit === 1) {\n        value = -value;\n    }\n\n    // Convert to temperature (multiply by gradient 0.1)\n    return value * 0.1;\n}\n\n// Get the value from the exact response format\nconst hexString = msg.payload.data.value;\nconst temperature = decodeTemperature(hexString);\n\n// Create output message\nmsg.payload = {\n    original: hexString,\n    temperature: temperature.toFixed(1)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 360,
+        "wires": [
+            [
+                "a9b5aea8ceb50365"
+            ]
+        ]
+    },
+    {
+        "id": "7e3295428acb70ab",
+        "type": "http request",
+        "z": "2e0418cda4baf1e8",
+        "name": "req.DATA1",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:3000/temperature1",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 360,
+        "wires": [
+            [
+                "9a740cf48311e2d0"
+            ]
+        ]
+    },
+    {
+        "id": "0554e091255b0877",
+        "type": "http request",
+        "z": "2e0418cda4baf1e8",
+        "name": "req.DATA2",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:3000/temperature2",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 560,
+        "wires": [
+            [
+                "8bff4d481d86cd5d"
+            ]
+        ]
+    },
+    {
+        "id": "8bff4d481d86cd5d",
+        "type": "function",
+        "z": "2e0418cda4baf1e8",
+        "name": "Convert.DATA",
+        "func": "// Node-RED Function node\nfunction decodeTemperature(hexString) {\n    // Remove \"AL\" prefix and get the hex value\n    const hexValue = hexString.substring(2);\n\n    // Convert hex to decimal\n    const decimal = parseInt(hexValue, 16);\n\n    // Extract sign bit (bit 15)\n    const signBit = (decimal >> 15) & 1;\n\n    // Extract value (bits 0-14)\n    let value = decimal & 0x7FFF;\n\n    // Apply sign if negative\n    if (signBit === 1) {\n        value = -value;\n    }\n\n    // Convert to temperature (multiply by gradient 0.1)\n    return value * 0.1;\n}\n\n// Get the value from the exact response format\nconst hexString = msg.payload.data.value;\nconst temperature = decodeTemperature(hexString);\n\n// Create output message\nmsg.payload = {\n    original: hexString,\n    temperature: temperature.toFixed(1)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 560,
+        "wires": [
+            [
+                "a9b5aea8ceb50365"
+            ]
+        ]
+    }
+]
