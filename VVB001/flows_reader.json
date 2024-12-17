@@ -1,0 +1,178 @@
+[
+    {
+        "id": "46136ff104f536b8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4b32b0187215f1cd",
+        "type": "debug",
+        "z": "46136ff104f536b8",
+        "name": "Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "50fca0fccfd17347",
+        "type": "iolink-VVB001-get-data",
+        "z": "46136ff104f536b8",
+        "name": "VVB001 data",
+        "ip": "localhost",
+        "ipType": "str",
+        "port": "80",
+        "topic": "",
+        "x": 350,
+        "y": 220,
+        "wires": [
+            [
+                "4b32b0187215f1cd",
+                "32a57704435e4cf8"
+            ]
+        ]
+    },
+    {
+        "id": "f86625f7838c4485",
+        "type": "mqtt in",
+        "z": "46136ff104f536b8",
+        "d": true,
+        "name": "",
+        "topic": "VVB001",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "af2c0f5b5f35f77d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 420,
+        "wires": [
+            [
+                "191ebd3f61c1514d"
+            ]
+        ]
+    },
+    {
+        "id": "d4f4052da8707544",
+        "type": "inject",
+        "z": "46136ff104f536b8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 220,
+        "wires": [
+            [
+                "50fca0fccfd17347"
+            ]
+        ]
+    },
+    {
+        "id": "191ebd3f61c1514d",
+        "type": "debug",
+        "z": "46136ff104f536b8",
+        "d": true,
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "32a57704435e4cf8",
+        "type": "influxdb out",
+        "z": "46136ff104f536b8",
+        "influxdb": "627c09a72b17f1f9",
+        "name": "Storage_VVB01",
+        "measurement": "VVB001",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "Dev Team",
+        "bucket": "DinayData",
+        "x": 580,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "af2c0f5b5f35f77d",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "mqtt://localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "627c09a72b17f1f9",
+        "type": "influxdb",
+        "hostname": "localhost",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "Dinayinflux",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com/",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    }
+]

@@ -1,0 +1,106 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "4fbf0cfab0f82fe9",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 280,
+        "wires": [
+            [
+                "1633fecc78b04417"
+            ]
+        ]
+    },
+    {
+        "id": "fc4b07aca6cf3210",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "1633fecc78b04417",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "name": "DP2200 Rq",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://10.116.1.229:3000",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 430,
+        "y": 200,
+        "wires": [
+            [
+                "c10f72833da2bf71"
+            ]
+        ]
+    },
+    {
+        "id": "c10f72833da2bf71",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "function DP2200",
+        "func": "// Function to parse 16-bit integers from hex\nfunction parseInt16(hex) {\n    const data = hex.match(/../g);\n    const buf = new ArrayBuffer(2);\n    const view = new DataView(buf);\n    data.forEach((b, i) => {\n        view.setUint8(i, parseInt(b, 16));\n    });\n    return view.getInt16(0, false);\n}\n\n// Function to interpret status codes\nfunction interpretStatus(hex) {\n    switch (hex.toUpperCase()) {\n        case '7FF8': return 'Normal Operation';\n        case '7FF0': return 'No Data';\n        case '7FFC': return 'Underload';\n        case '8008': return 'Overload';\n        default: {\n            // Check if it's a boolean OUT1 status\n            if (hex === '00') return 'OUT1: Inactive';\n            if (hex === '01') return 'OUT1: Active';\n            return 'Unknown Status';\n        }\n    }\n}\n\n// Process response\nif (msg.payload && msg.payload.data && msg.payload.data.value) {\n    const original = msg.payload.data.value;\n\n    // Check if it's a special status code\n    const isSpecialStatus = ['7FF8', '7FF0', '7FFC', '8008'].includes(original.toUpperCase());\n\n    if (isSpecialStatus) {\n        msg.payload = {\n            ts: new Date().toISOString(),\n            raw: original,\n            status: interpretStatus(original),\n            type: 'special_status'\n        };\n    } else {\n        // Normal reading with current and OUT1 status\n        const currentHex = original.substring(0, 4);\n        const statusHex = original.substring(4, 6);\n\n        msg.payload = {\n            ts: new Date().toISOString(),\n            current: (parseInt(currentHex, 16) * 0.001).toFixed(3) + ' mA',\n            status: interpretStatus(statusHex),\n            type: 'normal_reading'\n        };\n    }\n} else {\n    msg.payload = { error: 'Invalid response format' };\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 180,
+        "wires": [
+            [
+                "fc4b07aca6cf3210"
+            ]
+        ]
+    }
+]
